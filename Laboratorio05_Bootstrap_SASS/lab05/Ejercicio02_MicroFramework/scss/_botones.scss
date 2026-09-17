@@ -1,0 +1,19 @@
+// _botones.scss
+@each $nombre, $color in $tema-colores {
+    .btn-#{$nombre} {
+        // Llama al mixin de contraste
+        @include tema-componente($color);
+
+        // Uso de la función matemática para aplicar un margen y padding
+        padding: px-a-rem(10) px-a-rem(20);
+        margin: px-a-rem(5);
+        border: none;
+        border-radius: px-a-rem(4);
+        cursor: pointer;
+
+        &:hover {
+            // Oscurece dinámicamente el color un 15%
+            background-color: darken($color, 15%);
+        }
+    }
+}

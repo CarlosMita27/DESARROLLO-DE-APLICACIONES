@@ -1,0 +1,11 @@
+// _mixins.scss
+@mixin tema-componente($color-fondo) {
+    background-color: $color-fondo;
+
+    // Si el fondo es claro, el texto debe ser oscuro para hacer contraste, y viceversa
+    @if lightness($color-fondo) > 50% {
+        color: #000000;
+    } @else {
+        color: #ffffff;
+    }
+}

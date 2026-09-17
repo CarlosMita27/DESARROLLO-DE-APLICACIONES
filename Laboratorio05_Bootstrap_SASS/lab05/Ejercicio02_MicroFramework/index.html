@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación - Micro-Framework CSS</title>
+    <!-- Vinculación del CSS estándar transpilado -->
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- Encabezado Principal -->
+    <header style="border-bottom: 2px solid #eee; padding-bottom: 20px;">
+        <h2>Micro-Framework CSS Modular</h2>
+        <p>Sistema de diseño construido con Sass. Arquitectura basada en parciales semánticos, funciones matemáticas y abstracción de utilitarios.</p>
+    </header>
+
+    <!-- Sección 1: Prueba de Tipografía y Función px-a-rem -->
+    <section>
+        <h3 style="margin-top: 30px;">1. Tipografía y Escalamiento (Función px-a-rem)</h3>
+        <p>Este párrafo utiliza el tamaño de fuente base convertido dinámicamente a unidades <code>rem</code> mediante programación en Sass. Los márgenes inferiores también están automatizados para mantener el ritmo vertical.</p>
+        <p style="color: #6c757d;"><em>este elemento se inspecciona para verificar que usa rem en lugar de px.</em></p>
+    </section>
+
+    <!-- Sección 2: Prueba de Botones, Mapas, Bucles y Mixin de Contraste -->
+    <section>
+        <h3 style="margin-top: 30px;">2. Componentes UI: Botones Automatizados</h3>
+        <p>El color del texto se calcula automáticamente con la función <code>lightness()</code> para asegurar accesibilidad y contraste.</p>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn-primario">Primario</button>
+            <button class="btn-secundario">Secundario</button>
+            <button class="btn-acento">Acento</button>
+            <button class="btn-advertencia">Advertencia</button>
+            <button class="btn-peligro">Peligro</button>
+        </div>
+    </section>
+</body>
+</html>

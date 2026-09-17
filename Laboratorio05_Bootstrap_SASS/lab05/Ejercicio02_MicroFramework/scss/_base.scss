@@ -1,0 +1,17 @@
+// _base.scss
+// Aplicamos la función px-a-rem a toda la tipografía y márgenes base
+body {
+    font-family: sans-serif;
+    font-size: px-a-rem(16); // Se convertirá en 1rem
+    margin: px-a-rem(20);
+}
+
+h2 {
+    font-size: px-a-rem(32); // Se convertirá en 2rem
+    margin-bottom: px-a-rem(15);
+}
+
+p {
+    font-size: px-a-rem(18); // Se convertirá en 1.125rem
+    margin-bottom: px-a-rem(25);
+}

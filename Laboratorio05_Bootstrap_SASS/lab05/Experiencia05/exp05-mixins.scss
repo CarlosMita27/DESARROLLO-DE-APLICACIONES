@@ -1,0 +1,43 @@
+// 1. Mixin paramétrico para botones
+@mixin boton-estilo($color-fondo, $color-texto) {
+    background-color: $color-fondo;
+    color: $color-texto;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: darken($color-fondo, 10%);
+    }
+}
+
+// 2. Placeholder para mensajes de estado
+%mensaje-base {
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-family: sans-serif;
+}
+
+// 3. Botones usando el mixin
+.btn-aceptar {
+    @include boton-estilo(#2ecc71, white);
+}
+
+.btn-cancelar {
+    @include boton-estilo(#e74c3c, white);
+}
+
+// 4. Mensajes usando @extend
+.mensaje-error {
+    @extend %mensaje-base;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.mensaje-exito {
+    @extend %mensaje-base;
+    background-color: #d4edda;
+    color: #155724;
+}
