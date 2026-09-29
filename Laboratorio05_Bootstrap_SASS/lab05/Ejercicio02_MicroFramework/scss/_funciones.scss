@@ -1,0 +1,5 @@
+// _funciones.scss
+@function px-a-rem($pixeles) {
+    // Retorna el equivalente en rem basado en 16px
+    @return ($pixeles / 16) + rem;
+}
