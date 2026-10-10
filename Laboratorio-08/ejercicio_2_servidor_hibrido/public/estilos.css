@@ -1,0 +1,20 @@
+/*
+    ARCHIVO:      estilos.css
+    AUTOR:        Carlos Mita
+    FECHA:        10/10/2026
+    DESCRIPCIÓN:  Estilos de la interfaz del inventario.
+*/
+body { font-family: Arial, sans-serif; margin: 0; background: #f2f5f9; color: #1f2a3a; }
+header { background: #1f3864; color: #ffffff; padding: 1.5rem 2rem; }
+header h1 { margin: 0 0 .3rem; }
+main { max-width: 900px; margin: 1.5rem auto; padding: 0 1rem; }
+form { display: flex; gap: 1rem; align-items: end; flex-wrap: wrap; }
+label { display: flex; flex-direction: column; font-weight: bold; gap: .3rem; }
+input { padding: .45rem; border: 1px solid #b8c3d4; border-radius: 6px; }
+button { padding: .5rem 1rem; border: 0; border-radius: 6px; cursor: pointer;
+         background: #1f3864; color: #ffffff; }
+button:disabled { background: #9aa6b8; cursor: default; }
+table { width: 100%; border-collapse: collapse; background: #ffffff; margin: 1rem 0; }
+th, td { padding: .55rem .8rem; border-bottom: 1px solid #dde3ec; text-align: left; }
+th { background: #e6ecf5; }
+nav { display: flex; gap: 1rem; align-items: center; justify-content: center; }

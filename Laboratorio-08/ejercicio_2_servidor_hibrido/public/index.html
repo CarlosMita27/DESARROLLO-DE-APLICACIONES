@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+    ARCHIVO:      index.html
+    AUTOR:        Carlos Mita
+    FECHA:        10/10/2026
+    DESCRIPCIÓN:  Interfaz estática del inventario. Los datos se obtienen del
+                  endpoint /api/inventario del servidor híbrido.
+-->
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inventario de Equipos</title>
+    <link rel="stylesheet" href="/public/estilos.css">
+</head>
+<body>
+    <header>
+        <h1>Inventario de Equipos</h1>
+        <p>Interfaz servida por http.server; los datos provienen de /api/inventario.</p>
+    </header>
+    <main>
+        <form id="formulario-busqueda">
+            <label>Filtro <input type="text" id="filtro" placeholder="Ej.: laptop"></label>
+            <label>Límite <input type="number" id="limite" value="10" min="1"></label>
+            <button type="submit">Buscar</button>
+        </form>
+        <p id="resumen"></p>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Precio (S/)</th></tr>
+            </thead>
+            <tbody id="resultados"></tbody>
+        </table>
+        <nav>
+            <button type="button" id="anterior">Anterior</button>
+            <span id="indicador-pagina"></span>
+            <button type="button" id="siguiente">Siguiente</button>
+        </nav>
+    </main>
+    <script src="/public/app.js"></script>
+</body>
+</html>

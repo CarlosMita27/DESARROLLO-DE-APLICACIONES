@@ -1,0 +1,1 @@
+CLAVE-SECRETA-2026: este archivo está fuera de public/ y nunca debe ser accesible desde el servidor web.

@@ -1,0 +1,8 @@
+/*
+    ARCHIVO:      estilo.css
+    AUTOR:        Carlos Mita
+    FECHA:        10/10/2026
+    DESCRIPCIÓN:  Estilos de la página de inicio del servidor estático.
+*/
+body { font-family: Arial, sans-serif; margin: 3rem; background: #f4f7f4; color: #1b4d1b; }
+h1 { border-bottom: 3px solid #1b6b1b; padding-bottom: .5rem; }
