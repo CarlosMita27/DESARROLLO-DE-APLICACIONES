@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>Archivos por especialidad</title><link rel="stylesheet" href="estilos.css"></head>
+<body><main>
+  <h1>Carga de archivos por especialidad</h1>
+  <form id="formulario">
+    <label>Especialidad</label><select id="especialidad" name="especialidad"></select>
+    <label>Archivo</label><input type="file" name="archivo" required>
+    <button type="submit">Subir archivo</button>
+  </form>
+  <div id="mensaje"></div>
+  <h2>Archivos guardados</h2>
+  <div id="lista"></div>
+  <h2>Contenido del archivo</h2>
+  <pre id="contenido" class="resultado">Seleccione un archivo de la lista.</pre>
+  <p><a href="/">Volver</a></p>
+</main>
+<script>
+async function cargarEspecialidades() {
+  const res = await fetch('/api/especialidades');
+  const lista = await res.json();
+  document.getElementById('especialidad').innerHTML = lista.map(e => `<option>${e}</option>`).join('');
+}
+
+async function listar() {
+  const res = await fetch('/api/archivos');
+  const datos = await res.json();
+  document.getElementById('lista').innerHTML = Object.entries(datos).map(([esp, archivos]) =>
+    `<h4>📁 ${esp}</h4>` + (archivos.length
+      ? '<ul>' + archivos.map(a => `<li><a href="#" onclick="ver('${esp}','${encodeURIComponent(a)}');return false;">${a.replace(/^\d+_/, '')}</a></li>`).join('') + '</ul>'
+      : '<p><i>Sin archivos</i></p>')
+  ).join('');
+}
+
+async function ver(esp, nombre) {
+  const res = await fetch(`/api/archivos/${esp}/${nombre}`);
+  const tipo = res.headers.get('content-type') || '';
+  const salida = document.getElementById('contenido');
+  if (tipo.startsWith('text/')) salida.textContent = await res.text();
+  else salida.innerHTML = `Este tipo de archivo no se puede mostrar como texto. <a href="/api/archivos/${esp}/${nombre}" target="_blank">Abrir archivo</a>`;
+}
+
+document.getElementById('formulario').addEventListener('submit', async e => {
+  e.preventDefault();
+  const res = await fetch('/api/archivos', { method: 'POST', body: new FormData(e.target) });
+  const datos = await res.json();
+  const msg = document.getElementById('mensaje');
+  msg.className = 'resultado ' + (res.ok ? 'ok' : 'mal');
+  msg.textContent = datos.mensaje;
+  if (res.ok) { e.target.reset(); listar(); }
+});
+
+cargarEspecialidades();
+listar();
+</script></body></html>

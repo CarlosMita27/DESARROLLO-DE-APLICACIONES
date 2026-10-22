@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>Venta de pasajes</title><link rel="stylesheet" href="estilos.css"></head>
+<body><main>
+  <h1>Venta de pasajes aéreos</h1>
+  <label>Nombre del pasajero</label><input id="nombre" type="text">
+  <label>Fecha de nacimiento</label><input id="nacimiento" type="date">
+  <label>Fecha del viaje</label><input id="viaje" type="date">
+  <label>Precio completo del pasaje (S/)</label><input id="precio" type="number" min="0" step="0.01" value="300">
+  <button onclick="calcular()">Calcular precio</button>
+  <div id="resultado" class="resultado" hidden></div>
+  <p><a href="/">Volver</a></p>
+</main>
+<script>
+document.getElementById('viaje').valueAsDate = new Date();
+
+function calcularEdad(nac, ref) {
+  let edad = ref.getFullYear() - nac.getFullYear();
+  const m = ref.getMonth() - nac.getMonth();
+  if (m < 0 || (m === 0 && ref.getDate() < nac.getDate())) edad--;
+  return edad;
+}
+
+function calcular() {
+  const nombre = document.getElementById('nombre').value.trim() || 'Pasajero';
+  const nac = document.getElementById('nacimiento').valueAsDate;
+  const viaje = document.getElementById('viaje').valueAsDate;
+  const precio = parseFloat(document.getElementById('precio').value);
+  const salida = document.getElementById('resultado');
+  salida.hidden = false;
+  if (!nac || !viaje || isNaN(precio) || precio < 0) { salida.innerHTML = '<span class="mal">Complete correctamente los datos.</span>'; return; }
+  if (nac > viaje) { salida.innerHTML = '<span class="mal">La fecha de nacimiento no puede ser posterior al viaje.</span>'; return; }
+  const edad = calcularEdad(nac, viaje);
+  let categoria, factor;
+  if (edad >= 18) { categoria = 'Adulto (mayor de edad)'; factor = 1; }
+  else if (edad >= 2) { categoria = 'Menor de edad (2 a 17 años)'; factor = 0.75; }
+  else { categoria = 'Infante (menor de 2 años)'; factor = 0; }
+  const total = precio * factor;
+  salida.innerHTML = `<p><b>${nombre}</b>: ${edad} año(s).</p><p>Categoría: ${categoria}</p><p>Tarifa aplicada: ${factor * 100}% del precio</p><p class="ok">Total a pagar: S/ ${total.toFixed(2)}</p>`;
+}
+</script></body></html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>Matriz perfecta</title><link rel="stylesheet" href="estilos.css"></head>
+<body><main>
+  <h1>Matriz cuadrada perfecta</h1>
+  <p>Una matriz es <b>perfecta</b> si la suma de cada fila, de cada columna y de las dos diagonales es la misma.</p>
+  <label>Tamaño de la matriz (n x n)</label><input id="n" type="number" min="2" max="8" value="3">
+  <button onclick="generar()">Generar matriz aleatoria</button>
+  <button class="sec" onclick="buscar()">Buscar una matriz perfecta (3 x 3)</button>
+  <div id="salida"></div>
+  <p><a href="/">Volver</a></p>
+</main>
+<script>
+function mezclar(a) {
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+function crear(n) {
+  const nums = mezclar(Array.from({ length: n * n }, (_, i) => i + 1));
+  return Array.from({ length: n }, (_, f) => nums.slice(f * n, f * n + n));
+}
+
+function sumas(m) {
+  const n = m.length, lista = [];
+  for (let i = 0; i < n; i++) {
+    lista.push(m[i].reduce((a, b) => a + b, 0));
+    lista.push(m.reduce((a, fila) => a + fila[i], 0));
+  }
+  lista.push(m.reduce((a, fila, i) => a + fila[i], 0));
+  lista.push(m.reduce((a, fila, i) => a + fila[n - 1 - i], 0));
+  return lista;
+}
+
+const esPerfecta = m => sumas(m).every(s => s === sumas(m)[0]);
+
+function mostrar(m, intentos) {
+  const s = sumas(m);
+  const perfecta = esPerfecta(m);
+  const filas = m.map(f => '<tr>' + f.map(x => `<td>${x}</td>`).join('') + '</tr>').join('');
+  document.getElementById('salida').innerHTML =
+    `<table>${filas}</table><div class="resultado">Sumas de filas, columnas y diagonales: ${s.join(', ')}<br>` +
+    (perfecta ? `<span class="ok">La matriz es PERFECTA (suma ${s[0]}).</span>` : '<span class="mal">La matriz NO es perfecta.</span>') +
+    (intentos ? `<br>Intentos realizados: ${intentos}` : '') + '</div>';
+}
+
+function generar() {
+  const n = parseInt(document.getElementById('n').value);
+  if (!(n >= 2 && n <= 8)) { alert('Ingrese un tamaño entre 2 y 8'); return; }
+  mostrar(crear(n));
+}
+
+function buscar() {
+  document.getElementById('n').value = 3;
+  for (let i = 1; i <= 200000; i++) {
+    const m = crear(3);
+    if (esPerfecta(m)) { mostrar(m, i); return; }
+  }
+  document.getElementById('salida').innerHTML = '<div class="resultado mal">No se encontró una matriz perfecta; intente nuevamente.</div>';
+}
+</script></body></html>

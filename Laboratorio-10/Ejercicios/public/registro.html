@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>Inscripción de usuarios</title><link rel="stylesheet" href="estilos.css"></head>
+<body><main>
+  <h1>Inscripción de usuarios</h1>
+  <form action="/registro" method="post">
+    <label>Nombres</label><input name="nombres" required>
+    <label>Apellidos</label><input name="apellidos" required>
+    <label>Correo electrónico</label><input name="correo" type="email" required>
+    <label>Fecha de nacimiento</label><input name="nacimiento" type="date">
+    <label>Género</label>
+    <select name="genero"><option>Masculino</option><option>Femenino</option><option>Otro</option></select>
+    <label>Carrera</label><input name="carrera" value="Ingeniería de Sistemas">
+    <label>Contraseña</label><input name="clave" type="password" minlength="6" required>
+    <label>Confirmar contraseña</label><input name="confirmar" type="password" minlength="6" required>
+    <button type="submit">Registrar</button>
+  </form>
+  <p><a href="/">Volver</a></p>
+</main></body></html>
