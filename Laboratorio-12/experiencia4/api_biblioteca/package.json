@@ -1,0 +1,17 @@
+{
+  "name": "api_biblioteca",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "express": "^5.1.0",
+    "mysql2": "^3.24.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

@@ -1,0 +1,51 @@
+===== EXPERIENCIA 1: PROYECTO NODE.JS, EXPRESS Y NODEMON =====
+$ node -v
+v24.20.0
+$ npm -v
+11.19.0
+$ npm ls --depth=0
+api_biblioteca@1.0.0 D:\NUEVACARPTEAPS\Laboratorio12\experiencia1\api_biblioteca
++-- express@5.3.0
+`-- nodemon@3.1.14
+
+--- Servidor con Express + Nodemon ---
+$ npm run dev
+$ curl -s -w " -> %{http_code}\n" http://localhost:3001/
+{"mensaje":"API Biblioteca Digital en funcionamiento"} -> 200
+$ curl -s -w " -> %{http_code}\n" http://localhost:3001/api/libros
+[{"id":1,"titulo":"Cien años de soledad","autor":"Gabriel García Márquez","anio":1967},{"id":2,"titulo":"La ciudad y los perros","autor":"Mario Vargas Llosa","anio":1963}] -> 200
+$ curl -s -w " -> %{http_code}\n" http://localhost:3001/api/libros/2
+{"id":2,"titulo":"La ciudad y los perros","autor":"Mario Vargas Llosa","anio":1963} -> 200
+$ curl -s -w " -> %{http_code}\n" http://localhost:3001/api/libros/99
+{"error":"Libro no encontrado"} -> 404
+
+# Se modifica el mensaje de src/app.js y se guarda -> Nodemon reinicia
+$ curl -s -w " -> %{http_code}\n" http://localhost:3001/
+{"mensaje":"API Biblioteca Digital en funcionamiento (modificado)"} -> 200
+# Se restaura el mensaje original (Nodemon reinicia de nuevo)
+$ curl -s -w " -> %{http_code}\n" http://localhost:3001/
+{"mensaje":"API Biblioteca Digital en funcionamiento"} -> 200
+[servidor] 
+[servidor] > api_biblioteca@1.0.0 dev
+[servidor] > nodemon src/index.js
+[servidor] 
+[servidor] [nodemon] 3.1.14
+[servidor] [nodemon] to restart at any time, enter `rs`
+[servidor] [nodemon] watching path(s): src\**\*
+[servidor] [nodemon] watching extensions: js,json
+[servidor] [nodemon] starting `node src/index.js`
+[servidor] Servidor escuchando en http://localhost:3001
+[servidor] [nodemon] restarting due to changes...
+[servidor] [nodemon] starting `node src/index.js`
+[servidor] Servidor escuchando en http://localhost:3001
+[servidor] [nodemon] restarting due to changes...
+[servidor] [nodemon] starting `node src/index.js`
+[servidor] Servidor escuchando en http://localhost:3001
+
+--- Ejemplo 12.2: servidor mínimo con el módulo http ---
+$ node pruebas/servidor_http.js
+Servidor en http://localhost:3000
+$ curl -s -w " -> %{http_code}\n" http://localhost:3000/api/saludo
+{"mensaje":"Hola desde Node.js"} -> 200
+$ curl -s -w " -> %{http_code}\n" http://localhost:3000/otra
+{"error":"Ruta no encontrada"} -> 404

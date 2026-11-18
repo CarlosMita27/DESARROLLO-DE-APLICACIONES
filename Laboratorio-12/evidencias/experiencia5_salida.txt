@@ -1,0 +1,45 @@
+===== EXPERIENCIA 5: REGISTRO E INICIO DE SESIÓN CON JWT =====
+$ mysql (nube, TLS) < sql/usuarios.sql
+(tabla usuarios y procedimientos creados)
+$ node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+dcb82780648e1ae351e8923888e6be6b2fcd427c913e07edcd878ac277b2272e
+(ejemplo del comando; la clave real del proyecto está en .env como JWT_SECRET y no se muestra)
+$ npm run dev
+$ node pruebas/verificar_exp5.js
+Registro          -> 201 {
+  id: 1,
+  nombre: 'Lucía Quispe',
+  email: 'lucia@biblioteca.pe',
+  rol: 'lector'
+}
+Registro repetido -> 409 El email ya está registrado
+Login incorrecto  -> 401 Credenciales incorrectas
+Login correcto    -> 200 Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI...
+Payload: {
+  sub: '1',
+  nombre: 'Lucía Quispe',
+  rol: 'lector',
+  iat: 1794325330,
+  exp: 1794328930
+}
+
+# Registro con datos inválidos (password corta)
+$ curl -s -X POST -H "Content-Type: application/json" -d "{\"nombre\":\"Ana\",\"email\":\"ana@x.pe\",\"password\":\"123\"}" -w " -> %{http_code}\n" http://localhost:3005/api/auth/registro
+{"error":"nombre, email y password (mínimo 8 caracteres) son obligatorios"} -> 400
+[servidor] 
+[servidor] > api_biblioteca@1.0.0 dev
+[servidor] > nodemon src/index.js
+[servidor] 
+[servidor] [nodemon] 3.1.14
+[servidor] [nodemon] to restart at any time, enter `rs`
+[servidor] [nodemon] watching path(s): src\**\*
+[servidor] [nodemon] watching extensions: js,json
+[servidor] [nodemon] starting `node src/index.js`
+[servidor] Servidor escuchando en http://localhost:3005
+
+# Las contraseñas se guardan como hash bcrypt (nunca en texto plano):
++----+---------------------+--------------------------------------------------------------+--------+
+| id | email               | password_hash                                                | rol    |
++----+---------------------+--------------------------------------------------------------+--------+
+|  1 | lucia@biblioteca.pe | $2b$10$6JJstLE2aWAFHFTANu0uoe07Wkw.yBsRKVpWFy4rSxUDRvRCfO6mK | lector |
++----+---------------------+--------------------------------------------------------------+--------+

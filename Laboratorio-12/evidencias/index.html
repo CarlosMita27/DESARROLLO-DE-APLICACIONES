@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laboratorio 12 — Código y evidencias</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<style>
+:root{--bg:#f4f7f2;--card:#fff;--fg:#1d2a1d;--muted:#5b6b5b;--acc:#2f6b1f;--line:#d9e2d5;--pre:#0d1117;--pref:#dfe9dc;--ok:#7fd36b;--err:#ff8a7a;--cmd:#ffd479;--com:#8fb3ff;--srv:#7f8f80}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f140f;--card:#171f17;--fg:#e4ece2;--muted:#9fb09d;--acc:#8fd16f;--line:#2a352a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,Segoe UI,sans-serif}
+header{padding:28px 16px 10px;max-width:1200px;margin:auto}h1{margin:0;font-size:26px;color:var(--acc)}header p{margin:6px 0 0;color:var(--muted)}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 16px;max-width:1200px;margin:auto;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+nav a{color:var(--acc);text-decoration:none;padding:4px 12px;border:1px solid currentColor;border-radius:999px;font-size:13px}
+main{max-width:1200px;margin:auto;padding:8px 16px 40px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:20px 0;padding:18px;scroll-margin-top:60px}
+h2{margin:0;font-size:19px}h2 span{display:inline-block;background:var(--acc);color:#fff;border-radius:6px;padding:1px 9px;margin-right:10px;font-size:13px;vertical-align:2px}
+.desc{margin:6px 0 12px;color:var(--muted)}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.tb{background:none;border:0;border-bottom:3px solid transparent;padding:6px 14px;font:inherit;font-weight:600;color:var(--muted);cursor:pointer}
+.tb.on{color:var(--acc);border-color:var(--acc)}
+.pane{display:none}.pane.on{display:block}
+.code.on{display:grid;grid-template-columns:250px 1fr;gap:12px}
+.files{display:flex;flex-direction:column;gap:4px}
+.fb{text-align:left;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font:12.5px Consolas,ui-monospace,monospace;color:var(--fg);cursor:pointer;overflow-wrap:anywhere}
+.fb.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.file{display:none}.file.on{display:block}
+.path{font:12px Consolas,monospace;color:var(--muted);margin-bottom:6px}.path b{color:var(--fg)}
+pre{margin:0;background:var(--pre);color:var(--pref);border-radius:10px;overflow:auto;max-height:640px;font:13px/1.5 Consolas,ui-monospace,monospace}
+pre code.hljs{padding:14px;background:transparent}pre.out{padding:14px;white-space:pre}
+.cmd{color:var(--cmd)}.com{color:var(--com)}.srv{color:var(--srv)}.ok{color:var(--ok)}.err,.errl{color:var(--err)}
+@media (max-width:760px){.code.on{grid-template-columns:1fr}.files{flex-direction:row;flex-wrap:wrap}}
+</style></head><body>
+<header><h1>Laboratorio N° 12 — Servicios REST Node.js y JWT</h1>
+<p>Biblioteca Digital. Para cada experiencia, la pestaña <b>Código</b> muestra sus archivos clave y la pestaña <b>Ejecución</b> la salida real. Las experiencias 4 a 6 se ejecutaron contra Aiven for MySQL (nube real). Generado el 10/11/2026, 10:43:20 a. m..</p></header>
+<nav><a href="#e1">Exp. 1</a><a href="#e2">Exp. 2</a><a href="#e3">Exp. 3</a><a href="#e4">Exp. 4</a><a href="#e5">Exp. 5</a><a href="#e6">Exp. 6</a></nav>
+<main><section id="e1">
+  <h2><span>Experiencia 1</span>Proyecto Node.js, Express y Nodemon</h2><p class="desc">Se crea api_biblioteca con Express y Nodemon y se publican las primeras rutas GET con los libros en memoria.</p>
+  <div class="tabs"><button class="tb on" data-t="code">Código</button><button class="tb" data-t="run">Ejecución</button></div>
+  <div class="pane code on"><div class="files"><button class="fb on" data-f="0">package.json</button><button class="fb" data-f="1">nodemon.json</button><button class="fb" data-f="2">src/app.js</button><button class="fb" data-f="3">src/index.js</button><button class="fb" data-f="4">pruebas/servidor_http.js</button></div><div class="viewer"><div class="file on" data-f="0"><div class="path">experiencia1/api_biblioteca/<b>package.json</b></div><pre><code class="language-json">{
+  "name": "api_biblioteca",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
+</code></pre></div><div class="file" data-f="1"><div class="path">experiencia1/api_biblioteca/<b>nodemon.json</b></div><pre><code class="language-json">{
+  "watch": ["src"],
+  "ext": "js,json",
+  "ignore": ["pruebas/*"]
+}
+</code></pre></div><div class="file" data-f="2"><div class="path">experiencia1/api_biblioteca/<b>src/app.js</b></div><pre><code class="language-javascript">// src/app.js
+const express = require('express');
+
+const app = express();
+app.use(express.json());
+
+const libros = [
+  { id: 1, titulo: 'Cien años de soledad', autor: 'Gabriel García Márquez', anio: 1967 },
+  { id: 2, titulo: 'La ciudad y los perros', autor: 'Mario Vargas Llosa', anio: 1963 },
+];
+
+app.get('/', (req, res) =&gt; {
+  res.json({ mensaje: 'API Biblioteca Digital en funcionamiento' });
+});
+
+app.get('/api/libros', (req, res) =&gt; {
+  res.json(libros);
+});
+
+app.get('/api/libros/:id', (req, res) =&gt; {
+  const libro = libros.find((l) =&gt; l.id === Number(req.params.id));
+  if (!libro) {
+    return res.status(404).json({ error: 'Libro no encontrado' });
+  }
+  res.json(libro);
+});
+
+module.exports = app;
+</code></pre></div><div class="file" data-f="3"><div class="path">experiencia1/api_biblioteca/<b>src/index.js</b></div><pre><code class="language-javascript">// src/index.js
+const app = require('./app');
+
+const PUERTO = process.env.PORT || 3001;
+
+app.listen(PUERTO, () =&gt; {
+  console.log(`Servidor escuchando en http://localhost:${PUERTO}`);
+});
+</code></pre></div><div class="file" data-f="4"><div class="path">experiencia1/api_biblioteca/<b>pruebas/servidor_http.js</b></div><pre><code class="language-javascript">// servidor_http.js — servidor REST mínimo solo con el módulo http de Node.js (punto 12.2)
+const http = require('node:http');
+
+const servidor = http.createServer((req, res) =&gt; {
+  if (req.method === 'GET' &amp;&amp; req.url === '/api/saludo') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    return res.end(JSON.stringify({ mensaje: 'Hola desde Node.js' }));
+  }
+  res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.end(JSON.stringify({ error: 'Ruta no encontrada' }));
+});
+
+const PUERTO = process.env.PORT || 3000;
+servidor.listen(PUERTO, () =&gt; console.log(`Servidor en http://localhost:${PUERTO}`));
+</code></pre></div></div></div>
+  <div class="pane run"><pre class="out">===== EXPERIENCIA 1: PROYECTO NODE.JS, EXPRESS Y NODEMON =====
+<span class="cmd">$ node -v</span>
+v24.20.0
+<span class="cmd">$ npm -v</span>
+11.19.0
+<span class="cmd">$ npm ls --depth=0</span>
+api_biblioteca@1.0.0 D:\NUEVACARPTEAPS\Laboratorio12\experiencia1\api_biblioteca
++-- express@5.3.0
+`-- nodemon@3.1.14
+
+--- Servidor con Express + Nodemon ---
+<span class="cmd">$ npm run dev</span>
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3001/</span>
+{"mensaje":"API Biblioteca Digital en funcionamiento"} -&gt; <b class="ok">200</b>
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3001/api/libros</span>
+[{"id":1,"titulo":"Cien años de soledad","autor":"Gabriel García Márquez","anio":1967},{"id":2,"titulo":"La ciudad y los perros","autor":"Mario Vargas Llosa","anio":1963}] -&gt; <b class="ok">200</b>
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3001/api/libros/2</span>
+{"id":2,"titulo":"La ciudad y los perros","autor":"Mario Vargas Llosa","anio":1963} -&gt; <b class="ok">200</b>
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3001/api/libros/99</span>
+{"error":"Libro no encontrado"} -&gt; <b class="err">404</b>
+
+<span class="com"># Se modifica el mensaje de src/app.js y se guarda -&gt; Nodemon reinicia</span>
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3001/</span>
+{"mensaje":"API Biblioteca Digital en funcionamiento (modificado)"} -&gt; <b class="ok">200</b>
+<span class="com"># Se restaura el mensaje original (Nodemon reinicia de nuevo)</span>
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3001/</span>
+{"mensaje":"API Biblioteca Digital en funcionamiento"} -&gt; <b class="ok">200</b>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] &gt; api_biblioteca@1.0.0 dev</span>
+<span class="srv">[servidor] &gt; nodemon src/index.js</span>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] [nodemon] 3.1.14</span>
+<span class="srv">[servidor] [nodemon] to restart at any time, enter `rs`</span>
+<span class="srv">[servidor] [nodemon] watching path(s): src\**\*</span>
+<span class="srv">[servidor] [nodemon] watching extensions: js,json</span>
+<span class="srv">[servidor] [nodemon] starting `node src/index.js`</span>
+<span class="srv">[servidor] Servidor escuchando en http://localhost:3001</span>
+<span class="srv">[servidor] [nodemon] restarting due to changes...</span>
+<span class="srv">[servidor] [nodemon] starting `node src/index.js`</span>
+<span class="srv">[servidor] Servidor escuchando en http://localhost:3001</span>
+<span class="srv">[servidor] [nodemon] restarting due to changes...</span>
+<span class="srv">[servidor] [nodemon] starting `node src/index.js`</span>
+<span class="srv">[servidor] Servidor escuchando en http://localhost:3001</span>
+
+--- Ejemplo 12.2: servidor mínimo con el módulo http ---
+<span class="cmd">$ node pruebas/servidor_http.js</span>
+Servidor en http://localhost:3000
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3000/api/saludo</span>
+{"mensaje":"Hola desde Node.js"} -&gt; <b class="ok">200</b>
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3000/otra</span>
+{"error":"Ruta no encontrada"} -&gt; <b class="err">404</b>
+</pre></div>
+</section>
+<section id="e2">
+  <h2><span>Experiencia 2</span>Servicio RESTful CRUD con Express Router</h2><p class="desc">Las cinco operaciones CRUD se separan en rutas y controladores, con los códigos 200, 201, 204, 400 y 404.</p>
+  <div class="tabs"><button class="tb on" data-t="code">Código</button><button class="tb" data-t="run">Ejecución</button></div>
+  <div class="pane code on"><div class="files"><button class="fb on" data-f="0">src/controllers/libros.controller.js</button><button class="fb" data-f="1">src/routes/libros.routes.js</button><button class="fb" data-f="2">src/app.js</button><button class="fb" data-f="3">pruebas/http.js</button><button class="fb" data-f="4">pruebas/verificar_exp2.js</button></div><div class="viewer"><div class="file on" data-f="0"><div class="path">experiencia2/api_biblioteca/<b>src/controllers/libros.controller.js</b></div><pre><code class="language-javascript">// src/controllers/libros.controller.js
+let libros = [
+  { id: 1, titulo: 'Cien años de soledad', autor: 'Gabriel García Márquez', anio: 1967 },
+  { id: 2, titulo: 'La ciudad y los perros', autor: 'Mario Vargas Llosa', anio: 1963 },
+];
+let siguienteId = 3;
+
+// Devuelve los datos limpios o null si faltan campos obligatorios
+function validar(datos) {
+  const titulo = String(datos.titulo ?? '').trim();
+  const autor = String(datos.autor ?? '').trim();
+  if (!titulo || !autor) return null;
+  return { titulo, autor, anio: datos.anio ?? null };
+}
+
+const listar = (req, res) =&gt; {
+  res.json(libros);
+};
+
+const obtener = (req, res) =&gt; {
+  const libro = libros.find((l) =&gt; l.id === Number(req.params.id));
+  if (!libro) return res.status(404).json({ error: 'Libro no encontrado' });
+  res.json(libro);
+};
+
+const crear = (req, res) =&gt; {
+  const datos = validar(req.body ?? {});
+  if (!datos) {
+    return res.status(400).json({ error: 'titulo y autor son obligatorios' });
+  }
+  const nuevo = { id: siguienteId++, ...datos };
+  libros.push(nuevo);
+  res.status(201).json(nuevo);
+};
+
+const actualizar = (req, res) =&gt; {
+  const indice = libros.findIndex((l) =&gt; l.id === Number(req.params.id));
+  if (indice === -1) return res.status(404).json({ error: 'Libro no encontrado' });
+  const datos = validar(req.body ?? {});
+  if (!datos) {
+    return res.status(400).json({ error: 'titulo y autor son obligatorios' });
+  }
+  libros[indice] = { id: libros[indice].id, ...datos };
+  res.json(libros[indice]);
+};
+
+const eliminar = (req, res) =&gt; {
+  const id = Number(req.params.id);
+  if (!libros.some((l) =&gt; l.id === id)) {
+    return res.status(404).json({ error: 'Libro no encontrado' });
+  }
+  libros = libros.filter((l) =&gt; l.id !== id);
+  res.status(204).end();
+};
+
+module.exports = { listar, obtener, crear, actualizar, eliminar };
+</code></pre></div><div class="file" data-f="1"><div class="path">experiencia2/api_biblioteca/<b>src/routes/libros.routes.js</b></div><pre><code class="language-javascript">// src/routes/libros.routes.js
+const { Router } = require('express');
+const ctrl = require('../controllers/libros.controller');
+
+const router = Router();
+
+router.get('/', ctrl.listar);
+router.get('/:id', ctrl.obtener);
+router.post('/', ctrl.crear);
+router.put('/:id', ctrl.actualizar);
+router.delete('/:id', ctrl.eliminar);
+
+module.exports = router;
+</code></pre></div><div class="file" data-f="2"><div class="path">experiencia2/api_biblioteca/<b>src/app.js</b></div><pre><code class="language-javascript">// src/app.js
+const express = require('express');
+const librosRoutes = require('./routes/libros.routes');
+
+const app = express();
+app.use(express.json());
+
+app.get('/', (req, res) =&gt; {
+  res.json({ mensaje: 'API Biblioteca Digital en funcionamiento' });
+});
+
+app.use('/api/libros', librosRoutes);
+
+// Ruta no encontrada (siempre después de las rutas)
+app.use((req, res) =&gt; {
+  res.status(404).json({ error: `Ruta ${req.method} ${req.originalUrl} no encontrada` });
+});
+
+// Manejador de errores: Express 5 también recibe aquí los errores de funciones async
+app.use((err, req, res, next) =&gt; {
+  console.error(err);
+  const estado = err.status || 500;
+  res.status(estado).json({ error: estado === 500 ? 'Error interno del servidor' : err.message });
+});
+
+module.exports = app;
+</code></pre></div><div class="file" data-f="3"><div class="path">experiencia2/api_biblioteca/<b>pruebas/http.js</b></div><pre><code class="language-javascript">// pruebas/http.js — función auxiliar para consumir la API con fetch
+async function pedir(metodo, url, cuerpo = null, token = null) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const respuesta = await fetch(url, {
+    method: metodo,
+    headers,
+    body: cuerpo ? JSON.stringify(cuerpo) : undefined,
+  });
+  const texto = await respuesta.text();
+  return { estado: respuesta.status, datos: texto ? JSON.parse(texto) : null };
+}
+
+module.exports = { pedir };
+</code></pre></div><div class="file" data-f="4"><div class="path">experiencia2/api_biblioteca/<b>pruebas/verificar_exp2.js</b></div><pre><code class="language-javascript">// pruebas/verificar_exp2.js — ejecutar con el servidor en marcha
+const { pedir } = require('./http');
+
+const BASE = 'http://localhost:3002/api/libros';
+
+async function main() {
+  let r = await pedir('POST', BASE, { titulo: 'Los ríos profundos', autor: 'José María Arguedas' });
+  const id = r.datos.id;
+  console.log('POST válido    -&gt;', r.estado, 'id =', id);
+
+  r = await pedir('POST', BASE, { titulo: 'Sin autor' });
+  console.log('POST inválido  -&gt;', r.estado, r.datos.error);
+
+  r = await pedir('PUT', `${BASE}/${id}`,
+    { titulo: 'Los ríos profundos', autor: 'José María Arguedas', anio: 1958 });
+  console.log('PUT            -&gt;', r.estado, 'anio =', r.datos.anio);
+
+  r = await pedir('GET', BASE);
+  console.log('GET lista      -&gt;', r.estado, r.datos.map((l) =&gt; l.titulo));
+
+  r = await pedir('DELETE', `${BASE}/${id}`);
+  console.log('DELETE         -&gt;', r.estado);
+
+  r = await pedir('GET', `${BASE}/${id}`);
+  console.log('GET eliminado  -&gt;', r.estado, r.datos.error);
+}
+
+main().catch((e) =&gt; console.error('Error:', e.message));
+</code></pre></div></div></div>
+  <div class="pane run"><pre class="out">===== EXPERIENCIA 2: SERVICIO RESTFUL CRUD CON EXPRESS ROUTER =====
+<span class="cmd">$ npm run dev</span>
+<span class="cmd">$ node pruebas/verificar_exp2.js</span>
+POST válido    -&gt; <b class="ok">201</b> id = 3
+POST inválido  -&gt; <b class="err">400</b> titulo y autor son obligatorios
+PUT            -&gt; <b class="ok">200</b> anio = 1958
+GET lista      -&gt; <b class="ok">200</b> [
+  'Cien años de soledad',
+  'La ciudad y los perros',
+  'Los ríos profundos'
+]
+DELETE         -&gt; <b class="ok">204</b>
+GET eliminado  -&gt; <b class="err">404</b> Libro no encontrado
+
+<span class="com"># Casos adicionales: PUT inválido, PUT/DELETE inexistente y ruta no encontrada</span>
+<span class="cmd">$ curl -s -X PUT -H "Content-Type: application/json" -d "{\"titulo\":\"\"}" -w " -&gt; %{http_code}\n" http://localhost:3002/api/libros/1</span>
+{"error":"titulo y autor son obligatorios"} -&gt; <b class="err">400</b>
+<span class="cmd">$ curl -s -X PUT -H "Content-Type: application/json" -d "{\"titulo\":\"X\",\"autor\":\"Y\"}" -w " -&gt; %{http_code}\n" http://localhost:3002/api/libros/99</span>
+{"error":"Libro no encontrado"} -&gt; <b class="err">404</b>
+<span class="cmd">$ curl -s -X DELETE -w " -&gt; %{http_code}\n" http://localhost:3002/api/libros/99</span>
+{"error":"Libro no encontrado"} -&gt; <b class="err">404</b>
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3002/api/autores</span>
+{"error":"Ruta GET /api/autores no encontrada"} -&gt; <b class="err">404</b>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] &gt; api_biblioteca@1.0.0 dev</span>
+<span class="srv">[servidor] &gt; nodemon src/index.js</span>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] [nodemon] 3.1.14</span>
+<span class="srv">[servidor] [nodemon] to restart at any time, enter `rs`</span>
+<span class="srv">[servidor] [nodemon] watching path(s): src\**\*</span>
+<span class="srv">[servidor] [nodemon] watching extensions: js,json</span>
+<span class="srv">[servidor] [nodemon] starting `node src/index.js`</span>
+<span class="srv">[servidor] Servidor escuchando en http://localhost:3002</span>
+</pre></div>
+</section>
+<section id="e3">
+  <h2><span>Experiencia 3</span>Persistencia con MySQL y procedimientos almacenados</h2><p class="desc">La lista en memoria se reemplaza por MySQL. Cada operación es un CALL a un procedimiento, con marcadores ? y mysql2/promise.</p>
+  <div class="tabs"><button class="tb on" data-t="code">Código</button><button class="tb" data-t="run">Ejecución</button></div>
+  <div class="pane code on"><div class="files"><button class="fb on" data-f="0">sql/biblioteca.sql</button><button class="fb" data-f="1">src/db.js</button><button class="fb" data-f="2">src/controllers/libros.controller.js</button><button class="fb" data-f="3">src/index.js</button><button class="fb" data-f="4">.env.example</button></div><div class="viewer"><div class="file on" data-f="0"><div class="path">experiencia3/api_biblioteca/<b>sql/biblioteca.sql</b></div><pre><code class="language-sql">-- sql/biblioteca.sql
+SET NAMES utf8mb4;  -- el script está en UTF-8 (tildes y ñ)
+CREATE DATABASE IF NOT EXISTS biblioteca
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE biblioteca;
+
+CREATE TABLE IF NOT EXISTS libros (
+  id      INT AUTO_INCREMENT PRIMARY KEY,
+  titulo  VARCHAR(200) NOT NULL,
+  autor   VARCHAR(120) NOT NULL,
+  anio    SMALLINT NULL,
+  creado  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO libros (titulo, autor, anio) VALUES
+  ('Cien años de soledad', 'Gabriel García Márquez', 1967),
+  ('La ciudad y los perros', 'Mario Vargas Llosa', 1963);
+
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS sp_libros_listar //
+CREATE PROCEDURE sp_libros_listar()
+BEGIN
+  SELECT id, titulo, autor, anio FROM libros ORDER BY id;
+END //
+
+DROP PROCEDURE IF EXISTS sp_libros_obtener //
+CREATE PROCEDURE sp_libros_obtener(IN p_id INT)
+BEGIN
+  SELECT id, titulo, autor, anio FROM libros WHERE id = p_id;
+END //
+
+DROP PROCEDURE IF EXISTS sp_libros_crear //
+CREATE PROCEDURE sp_libros_crear(IN p_titulo VARCHAR(200),
+                                 IN p_autor VARCHAR(120),
+                                 IN p_anio SMALLINT)
+BEGIN
+  INSERT INTO libros (titulo, autor, anio) VALUES (p_titulo, p_autor, p_anio);
+  SELECT LAST_INSERT_ID() AS id;
+END //
+
+DROP PROCEDURE IF EXISTS sp_libros_actualizar //
+CREATE PROCEDURE sp_libros_actualizar(IN p_id INT,
+                                      IN p_titulo VARCHAR(200),
+                                      IN p_autor VARCHAR(120),
+                                      IN p_anio SMALLINT)
+BEGIN
+  DECLARE v_existe INT DEFAULT 0;
+  SELECT COUNT(*) INTO v_existe FROM libros WHERE id = p_id;
+  IF v_existe &gt; 0 THEN
+    UPDATE libros SET titulo = p_titulo, autor = p_autor, anio = p_anio
+     WHERE id = p_id;
+  END IF;
+  SELECT v_existe AS filas;
+END //
+
+DROP PROCEDURE IF EXISTS sp_libros_eliminar //
+CREATE PROCEDURE sp_libros_eliminar(IN p_id INT)
+BEGIN
+  DELETE FROM libros WHERE id = p_id;
+  SELECT ROW_COUNT() AS filas;
+END //
+
+DELIMITER ;
+
+-- Usuario de la aplicación (solo puede ejecutar procedimientos y leer/escribir datos)
+CREATE USER IF NOT EXISTS 'biblioteca_user'@'localhost' IDENTIFIED BY 'CambiaEstaClave_123';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON biblioteca.* TO 'biblioteca_user'@'localhost';
+</code></pre></div><div class="file" data-f="1"><div class="path">experiencia3/api_biblioteca/<b>src/db.js</b></div><pre><code class="language-javascript">// src/db.js
+const mysql = require('mysql2/promise');
+
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT || 3306),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+});
+
+// Ejecuta CALL procedimiento(?, ?, ...) y devuelve las filas del primer SELECT
+async function llamar(procedimiento, parametros = []) {
+  const marcadores = parametros.map(() =&gt; '?').join(', ');
+  const [resultados] = await pool.query(`CALL ${procedimiento}(${marcadores})`, parametros);
+  return resultados[0];
+}
+
+module.exports = { pool, llamar };
+</code></pre></div><div class="file" data-f="2"><div class="path">experiencia3/api_biblioteca/<b>src/controllers/libros.controller.js</b></div><pre><code class="language-javascript">// src/controllers/libros.controller.js
+const { llamar } = require('../db');
+
+function validar(datos) {
+  const titulo = String(datos.titulo ?? '').trim();
+  const autor = String(datos.autor ?? '').trim();
+  if (!titulo || !autor) return null;
+  return { titulo, autor, anio: datos.anio ?? null };
+}
+
+const listar = async (req, res) =&gt; {
+  const libros = await llamar('sp_libros_listar');
+  res.json(libros);
+};
+
+const obtener = async (req, res) =&gt; {
+  const [libro] = await llamar('sp_libros_obtener', [Number(req.params.id)]);
+  if (!libro) return res.status(404).json({ error: 'Libro no encontrado' });
+  res.json(libro);
+};
+
+const crear = async (req, res) =&gt; {
+  const datos = validar(req.body ?? {});
+  if (!datos) {
+    return res.status(400).json({ error: 'titulo y autor son obligatorios' });
+  }
+  const [{ id }] = await llamar('sp_libros_crear', [datos.titulo, datos.autor, datos.anio]);
+  res.status(201).json({ id, ...datos });
+};
+
+const actualizar = async (req, res) =&gt; {
+  const id = Number(req.params.id);
+  const datos = validar(req.body ?? {});
+  if (!datos) {
+    return res.status(400).json({ error: 'titulo y autor son obligatorios' });
+  }
+  const [{ filas }] = await llamar('sp_libros_actualizar',
+    [id, datos.titulo, datos.autor, datos.anio]);
+  if (filas === 0) return res.status(404).json({ error: 'Libro no encontrado' });
+  res.json({ id, ...datos });
+};
+
+const eliminar = async (req, res) =&gt; {
+  const [{ filas }] = await llamar('sp_libros_eliminar', [Number(req.params.id)]);
+  if (filas === 0) return res.status(404).json({ error: 'Libro no encontrado' });
+  res.status(204).end();
+};
+
+module.exports = { listar, obtener, crear, actualizar, eliminar };
+</code></pre></div><div class="file" data-f="3"><div class="path">experiencia3/api_biblioteca/<b>src/index.js</b></div><pre><code class="language-javascript">// src/index.js
+require('dotenv').config({ quiet: true }); // carga las variables de .env en process.env
+const app = require('./app');
+
+const PUERTO = process.env.PORT || 3003;
+
+app.listen(PUERTO, () =&gt; {
+  console.log(`Servidor escuchando en http://localhost:${PUERTO}`);
+});
+</code></pre></div><div class="file" data-f="4"><div class="path">experiencia3/api_biblioteca/<b>.env.example</b></div><pre><code class="language-ini">PORT=3003
+DB_HOST=127.0.0.1
+DB_PORT=3307
+DB_USER=biblioteca_user
+DB_PASSWORD=&lt;tu_clave&gt;
+DB_NAME=biblioteca
+</code></pre></div></div></div>
+  <div class="pane run"><pre class="out">===== EXPERIENCIA 3: PERSISTENCIA CON MYSQL Y PROCEDIMIENTOS ALMACENADOS =====
+<span class="com"># Servidor MySQL 8 local (puerto 3307 en este equipo)</span>
+<span class="cmd">$ mysql -u root -p &lt; sql/biblioteca.sql</span>
+(script ejecutado sin errores)
+<span class="cmd">$ mysql&gt; SHOW PROCEDURE STATUS WHERE Db = 'biblioteca';</span>
++----------------------+-----------+
+| procedimiento        | tipo      |
++----------------------+-----------+
+| sp_libros_actualizar | PROCEDURE |
+| sp_libros_crear      | PROCEDURE |
+| sp_libros_eliminar   | PROCEDURE |
+| sp_libros_listar     | PROCEDURE |
+| sp_libros_obtener    | PROCEDURE |
++----------------------+-----------+
+<span class="cmd">$ cat .env</span>
+PORT=3003
+DB_HOST=127.0.0.1
+DB_PORT=3307
+DB_USER=biblioteca_user
+DB_PASSWORD=CambiaEstaClave_123
+DB_NAME=biblioteca
+<span class="cmd">$ npm run dev</span>
+<span class="cmd">$ node pruebas/verificar_exp2.js</span>
+POST válido    -&gt; <b class="ok">201</b> id = 3
+POST inválido  -&gt; <b class="err">400</b> titulo y autor son obligatorios
+PUT            -&gt; <b class="ok">200</b> anio = 1958
+GET lista      -&gt; <b class="ok">200</b> [
+  'Cien años de soledad',
+  'La ciudad y los perros',
+  'Los ríos profundos'
+]
+DELETE         -&gt; <b class="ok">204</b>
+GET eliminado  -&gt; <b class="err">404</b> Libro no encontrado
+
+<span class="com"># Se crea un libro que queda guardado en MySQL</span>
+<span class="cmd">$ curl -s -X POST -H "Content-Type: application/json" -d "{\"titulo\":\"Tradiciones peruanas\",\"autor\":\"Ricardo Palma\",\"anio\":1872}" -w " -&gt; %{http_code}\n" http://localhost:3003/api/libros</span>
+{"id":4,"titulo":"Tradiciones peruanas","autor":"Ricardo Palma","anio":1872} -&gt; <b class="ok">201</b>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] &gt; api_biblioteca@1.0.0 dev</span>
+<span class="srv">[servidor] &gt; nodemon src/index.js</span>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] [nodemon] 3.1.14</span>
+<span class="srv">[servidor] [nodemon] to restart at any time, enter `rs`</span>
+<span class="srv">[servidor] [nodemon] watching path(s): src\**\*</span>
+<span class="srv">[servidor] [nodemon] watching extensions: js,json</span>
+<span class="srv">[servidor] [nodemon] starting `node src/index.js`</span>
+<span class="srv">[servidor] Servidor escuchando en http://localhost:3003</span>
+
+<span class="com"># El servidor se detuvo y se vuelve a iniciar: los datos persisten</span>
+<span class="cmd">$ npm run dev</span>
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3003/api/libros</span>
+[{"id":1,"titulo":"Cien años de soledad","autor":"Gabriel García Márquez","anio":1967},{"id":2,"titulo":"La ciudad y los perros","autor":"Mario Vargas Llosa","anio":1963},{"id":4,"titulo":"Tradiciones peruanas","autor":"Ricardo Palma","anio":1872}] -&gt; <b class="ok">200</b>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] &gt; api_biblioteca@1.0.0 dev</span>
+<span class="srv">[servidor] &gt; nodemon src/index.js</span>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] [nodemon] 3.1.14</span>
+<span class="srv">[servidor] [nodemon] to restart at any time, enter `rs`</span>
+<span class="srv">[servidor] [nodemon] watching path(s): src\**\*</span>
+<span class="srv">[servidor] [nodemon] watching extensions: js,json</span>
+<span class="srv">[servidor] [nodemon] starting `node src/index.js`</span>
+<span class="srv">[servidor] Servidor escuchando en http://localhost:3003</span>
+
+<span class="cmd">$ mysql&gt; CALL sp_libros_listar();</span>
++----+------------------------+--------------------------+------+
+| id | titulo                 | autor                    | anio |
++----+------------------------+--------------------------+------+
+|  1 | Cien años de soledad   | Gabriel García Márquez   | 1967 |
+|  2 | La ciudad y los perros | Mario Vargas Llosa       | 1963 |
+|  4 | Tradiciones peruanas   | Ricardo Palma            | 1872 |
++----+------------------------+--------------------------+------+
+</pre></div>
+</section>
+<section id="e4">
+  <h2><span>Experiencia 4</span>Base de datos MySQL en la nube (Aiven, TLS)</h2><p class="desc">La base se lleva a Aiven for MySQL. Solo cambian el .env y la opción ssl, que valida el certificado CA.</p>
+  <div class="tabs"><button class="tb on" data-t="code">Código</button><button class="tb" data-t="run">Ejecución</button></div>
+  <div class="pane code on"><div class="files"><button class="fb on" data-f="0">src/db.js</button><button class="fb" data-f="1">sql/nube_base_usuario.sql</button><button class="fb" data-f="2">pruebas/probar_conexion.js</button><button class="fb" data-f="3">.env.example</button><button class="fb" data-f="4">.gitignore</button></div><div class="viewer"><div class="file on" data-f="0"><div class="path">experiencia4/api_biblioteca/<b>src/db.js</b></div><pre><code class="language-javascript">// src/db.js
+const fs = require('node:fs');
+const mysql = require('mysql2/promise');
+
+// Conexión cifrada (TLS) cuando DB_SSL=true; se valida el certificado del servidor
+function opcionesSSL() {
+  if (process.env.DB_SSL !== 'true') return undefined;
+  if (process.env.DB_SSL_CA) {
+    return { ca: fs.readFileSync(process.env.DB_SSL_CA, 'utf8'), rejectUnauthorized: true };
+  }
+  return { rejectUnauthorized: true };
+}
+
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT || 3306),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  ssl: opcionesSSL(),
+  waitForConnections: true,
+  connectionLimit: 5,
+  connectTimeout: 15000,
+});
+
+async function llamar(procedimiento, parametros = []) {
+  const marcadores = parametros.map(() =&gt; '?').join(', ');
+  const [resultados] = await pool.query(`CALL ${procedimiento}(${marcadores})`, parametros);
+  return resultados[0];
+}
+
+module.exports = { pool, llamar };
+</code></pre></div><div class="file" data-f="1"><div class="path">experiencia4/api_biblioteca/<b>sql/nube_base_usuario.sql</b></div><pre><code class="language-sql">-- En el cliente SQL conectado al servidor en la nube (con el usuario administrador)
+CREATE DATABASE IF NOT EXISTS biblioteca
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER IF NOT EXISTS 'biblioteca_app'@'%' IDENTIFIED BY 'ClaveGeneradaPorElProveedor';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON biblioteca.* TO 'biblioteca_app'@'%';
+</code></pre></div><div class="file" data-f="2"><div class="path">experiencia4/api_biblioteca/<b>pruebas/probar_conexion.js</b></div><pre><code class="language-javascript">// pruebas/probar_conexion.js
+require('dotenv').config({ quiet: true });
+const { pool, llamar } = require('../src/db');
+
+async function main() {
+  const [[info]] = await pool.query('SELECT VERSION() AS version, DATABASE() AS base');
+  console.log('Conectado a MySQL', info.version, '- base:', info.base);
+
+  const [[cifrado]] = await pool.query("SHOW SESSION STATUS LIKE 'Ssl_cipher'");
+  console.log('Cifrado TLS:', cifrado.Value || '(conexión sin cifrar)');
+
+  const libros = await llamar('sp_libros_listar');
+  console.log('Libros en la nube:', libros.map((l) =&gt; l.titulo));
+}
+
+main()
+  .catch((e) =&gt; console.error('No se pudo conectar:', e.code || e.message))
+  .finally(() =&gt; pool.end());
+</code></pre></div><div class="file" data-f="3"><div class="path">experiencia4/api_biblioteca/<b>.env.example</b></div><pre><code class="language-ini"># .env (datos que entrega el panel del proveedor en la nube: Aiven &gt; servicio &gt; Overview)
+PORT=3004
+DB_HOST=mysql-biblioteca-tuusuario.proveedor-nube.com
+DB_PORT=&lt;puerto_del_panel&gt;
+DB_USER=biblioteca_app
+DB_PASSWORD=&lt;clave_del_proveedor&gt;
+DB_NAME=biblioteca
+DB_SSL=true
+DB_SSL_CA=./certs/ca.pem
+</code></pre></div><div class="file" data-f="4"><div class="path">experiencia4/api_biblioteca/<b>.gitignore</b></div><pre><code class="language-ini">node_modules/
+.env
+certs/
+</code></pre></div></div></div>
+  <div class="pane run"><pre class="out">===== EXPERIENCIA 4: BASE DE DATOS MYSQL EN LA NUBE (TLS) =====
+<span class="com"># Proveedor: Aiven for MySQL (plan Developer, DigitalOcean nyc). SSL mode: REQUIRED.</span>
+<span class="com"># Host: mysql-3bfd4f3d-carlosalberto1527m-e456.f.aivencloud.com  Puerto: 15472  CA: certs/ca.pem (descargado del panel)</span>
+
+<span class="com"># Cliente mysql con SSL verificado, usuario administrador del proveedor (avnadmin):</span>
+<span class="cmd">$ mysql -h &lt;host&gt; -P &lt;puerto&gt; -u avnadmin -p --ssl-mode=VERIFY_IDENTITY --ssl-ca=certs/ca.pem &lt; sql/nube_base_usuario.sql</span>
+(base biblioteca y usuario biblioteca_app creados; la clave real está en .env)
+<span class="cmd">$ mysql ... -D biblioteca &lt; sql/biblioteca_nube.sql   (biblioteca.sql sin el bloque del usuario local)</span>
+(tablas y procedimientos creados)
+
+<span class="cmd">$ mysql (nube)&gt; SHOW PROCEDURE STATUS WHERE Db = 'biblioteca';</span>
++----------------------+
+| procedimiento        |
++----------------------+
+| sp_libros_actualizar |
+| sp_libros_crear      |
+| sp_libros_eliminar   |
+| sp_libros_listar     |
+| sp_libros_obtener    |
++----------------------+
+
+<span class="com"># Validación del certificado: con una CA equivocada la conexión TLS se rechaza</span>
+<span class="cmd">$ mysql -h &lt;host&gt; -P &lt;puerto&gt; -u avnadmin -p --ssl-mode=VERIFY_IDENTITY --ssl-ca=&lt;CA de otro servidor&gt;</span>
+<span class="errl">ERROR 2026 (HY000): SSL connection error: error:0A000086:SSL routines::certificate verify failed</span>
+<span class="cmd">$ cat .gitignore</span>
+node_modules/
+.env
+certs/
+<span class="cmd">$ node pruebas/probar_conexion.js</span>
+Conectado a MySQL 8.4.11 - base: biblioteca
+Cifrado TLS: TLS_AES_256_GCM_SHA384
+Libros en la nube: [ 'Cien años de soledad', 'La ciudad y los perros' ]
+<span class="cmd">$ npm run dev</span>
+<span class="cmd">$ node pruebas/verificar_exp2.js</span>
+POST válido    -&gt; <b class="ok">201</b> id = 3
+POST inválido  -&gt; <b class="err">400</b> titulo y autor son obligatorios
+PUT            -&gt; <b class="ok">200</b> anio = 1958
+GET lista      -&gt; <b class="ok">200</b> [
+  'Cien años de soledad',
+  'La ciudad y los perros',
+  'Los ríos profundos'
+]
+DELETE         -&gt; <b class="ok">204</b>
+GET eliminado  -&gt; <b class="err">404</b> Libro no encontrado
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] &gt; api_biblioteca@1.0.0 dev</span>
+<span class="srv">[servidor] &gt; nodemon src/index.js</span>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] [nodemon] 3.1.14</span>
+<span class="srv">[servidor] [nodemon] to restart at any time, enter `rs`</span>
+<span class="srv">[servidor] [nodemon] watching path(s): src\**\*</span>
+<span class="srv">[servidor] [nodemon] watching extensions: js,json</span>
+<span class="srv">[servidor] [nodemon] starting `node src/index.js`</span>
+<span class="srv">[servidor] Servidor escuchando en http://localhost:3004</span>
+</pre></div>
+</section>
+<section id="e5">
+  <h2><span>Experiencia 5</span>Registro e inicio de sesión con JWT</h2><p class="desc">Se registran usuarios con bcrypt y el login emite un JWT firmado con HS256 que expira en 1 hora.</p>
+  <div class="tabs"><button class="tb on" data-t="code">Código</button><button class="tb" data-t="run">Ejecución</button></div>
+  <div class="pane code on"><div class="files"><button class="fb on" data-f="0">sql/usuarios.sql</button><button class="fb" data-f="1">src/controllers/auth.controller.js</button><button class="fb" data-f="2">src/routes/auth.routes.js</button><button class="fb" data-f="3">src/app.js</button><button class="fb" data-f="4">pruebas/verificar_exp5.js</button></div><div class="viewer"><div class="file on" data-f="0"><div class="path">experiencia5/api_biblioteca/<b>sql/usuarios.sql</b></div><pre><code class="language-sql">-- sql/usuarios.sql
+SET NAMES utf8mb4;  -- el script está en UTF-8 (tildes y ñ)
+USE biblioteca;
+
+CREATE TABLE IF NOT EXISTS usuarios (
+  id             INT AUTO_INCREMENT PRIMARY KEY,
+  nombre         VARCHAR(100) NOT NULL,
+  email          VARCHAR(120) NOT NULL UNIQUE,
+  password_hash  VARCHAR(100) NOT NULL,
+  rol            ENUM('admin', 'lector') NOT NULL DEFAULT 'lector',
+  creado         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS sp_usuario_registrar //
+CREATE PROCEDURE sp_usuario_registrar(IN p_nombre VARCHAR(100),
+                                      IN p_email VARCHAR(120),
+                                      IN p_hash VARCHAR(100),
+                                      IN p_rol VARCHAR(10))
+BEGIN
+  INSERT INTO usuarios (nombre, email, password_hash, rol)
+  VALUES (p_nombre, p_email, p_hash, p_rol);
+  SELECT LAST_INSERT_ID() AS id;
+END //
+
+DROP PROCEDURE IF EXISTS sp_usuario_buscar_email //
+CREATE PROCEDURE sp_usuario_buscar_email(IN p_email VARCHAR(120))
+BEGIN
+  SELECT id, nombre, email, password_hash, rol FROM usuarios WHERE email = p_email;
+END //
+
+DROP PROCEDURE IF EXISTS sp_usuario_obtener //
+CREATE PROCEDURE sp_usuario_obtener(IN p_id INT)
+BEGIN
+  SELECT id, nombre, email, rol, creado FROM usuarios WHERE id = p_id;
+END //
+
+DELIMITER ;
+</code></pre></div><div class="file" data-f="1"><div class="path">experiencia5/api_biblioteca/<b>src/controllers/auth.controller.js</b></div><pre><code class="language-javascript">// src/controllers/auth.controller.js
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { llamar } = require('../db');
+
+const registrar = async (req, res) =&gt; {
+  const { nombre, email, password } = req.body ?? {};
+  if (!nombre || !email || !password || String(password).length &lt; 8) {
+    return res.status(400).json({
+      error: 'nombre, email y password (mínimo 8 caracteres) son obligatorios',
+    });
+  }
+  const correo = String(email).trim().toLowerCase();
+  const hash = await bcrypt.hash(String(password), 10); // 10 rondas de sal
+  try {
+    const [{ id }] = await llamar('sp_usuario_registrar', [nombre, correo, hash, 'lector']);
+    res.status(201).json({ id, nombre, email: correo, rol: 'lector' });
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ error: 'El email ya está registrado' });
+    }
+    throw err; // lo atiende el manejador de errores de app.js
+  }
+};
+
+const login = async (req, res) =&gt; {
+  const { email, password } = req.body ?? {};
+  const correo = String(email ?? '').trim().toLowerCase();
+  const [usuario] = await llamar('sp_usuario_buscar_email', [correo]);
+  const valido = usuario &amp;&amp; (await bcrypt.compare(String(password ?? ''), usuario.password_hash));
+  if (!valido) {
+    return res.status(401).json({ error: 'Credenciales incorrectas' });
+  }
+  const expiraEn = process.env.JWT_EXPIRES_IN || '1h';
+  const token = jwt.sign(
+    { sub: String(usuario.id), nombre: usuario.nombre, rol: usuario.rol },
+    process.env.JWT_SECRET,
+    { algorithm: 'HS256', expiresIn: expiraEn },
+  );
+  res.json({ token, tipo: 'Bearer', expiraEn });
+};
+
+module.exports = { registrar, login };
+</code></pre></div><div class="file" data-f="2"><div class="path">experiencia5/api_biblioteca/<b>src/routes/auth.routes.js</b></div><pre><code class="language-javascript">// src/routes/auth.routes.js
+const { Router } = require('express');
+const ctrl = require('../controllers/auth.controller');
+
+const router = Router();
+
+router.post('/registro', ctrl.registrar);
+router.post('/login', ctrl.login);
+
+module.exports = router;
+</code></pre></div><div class="file" data-f="3"><div class="path">experiencia5/api_biblioteca/<b>src/app.js</b></div><pre><code class="language-javascript">// src/app.js
+const express = require('express');
+const librosRoutes = require('./routes/libros.routes');
+const authRoutes = require('./routes/auth.routes');
+
+const app = express();
+app.use(express.json());
+
+app.get('/', (req, res) =&gt; {
+  res.json({ mensaje: 'API Biblioteca Digital en funcionamiento' });
+});
+
+app.use('/api/libros', librosRoutes);
+app.use('/api/auth', authRoutes);
+
+// Ruta no encontrada (siempre después de las rutas)
+app.use((req, res) =&gt; {
+  res.status(404).json({ error: `Ruta ${req.method} ${req.originalUrl} no encontrada` });
+});
+
+// Manejador de errores: Express 5 también recibe aquí los errores de funciones async
+app.use((err, req, res, next) =&gt; {
+  console.error(err);
+  const estado = err.status || 500;
+  res.status(estado).json({ error: estado === 500 ? 'Error interno del servidor' : err.message });
+});
+
+module.exports = app;
+</code></pre></div><div class="file" data-f="4"><div class="path">experiencia5/api_biblioteca/<b>pruebas/verificar_exp5.js</b></div><pre><code class="language-javascript">// pruebas/verificar_exp5.js
+const { pedir } = require('./http');
+
+const BASE = 'http://localhost:3005/api/auth';
+const usuario = { nombre: 'Lucía Quispe', email: 'lucia@biblioteca.pe', password: 'Lectura2026' };
+
+async function main() {
+  let r = await pedir('POST', `${BASE}/registro`, usuario);
+  console.log('Registro          -&gt;', r.estado, r.datos);
+
+  r = await pedir('POST', `${BASE}/registro`, usuario);
+  console.log('Registro repetido -&gt;', r.estado, r.datos.error);
+
+  r = await pedir('POST', `${BASE}/login`, { email: usuario.email, password: 'otraClave1' });
+  console.log('Login incorrecto  -&gt;', r.estado, r.datos.error);
+
+  r = await pedir('POST', `${BASE}/login`, { email: usuario.email, password: usuario.password });
+  console.log('Login correcto    -&gt;', r.estado, r.datos.tipo, r.datos.token.slice(0, 48) + '...');
+
+  // El payload solo está codificado en Base64URL: cualquiera puede leerlo
+  const [, payload] = r.datos.token.split('.');
+  console.log('Payload:', JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')));
+}
+
+main().catch((e) =&gt; console.error('Error:', e.message));
+</code></pre></div></div></div>
+  <div class="pane run"><pre class="out">===== EXPERIENCIA 5: REGISTRO E INICIO DE SESIÓN CON JWT =====
+<span class="cmd">$ mysql (nube, TLS) &lt; sql/usuarios.sql</span>
+(tabla usuarios y procedimientos creados)
+<span class="cmd">$ node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"</span>
+dcb82780648e1ae351e8923888e6be6b2fcd427c913e07edcd878ac277b2272e
+(ejemplo del comando; la clave real del proyecto está en .env como JWT_SECRET y no se muestra)
+<span class="cmd">$ npm run dev</span>
+<span class="cmd">$ node pruebas/verificar_exp5.js</span>
+Registro          -&gt; <b class="ok">201</b> {
+  id: 1,
+  nombre: 'Lucía Quispe',
+  email: 'lucia@biblioteca.pe',
+  rol: 'lector'
+}
+Registro repetido -&gt; <b class="err">409</b> El email ya está registrado
+Login incorrecto  -&gt; <b class="err">401</b> Credenciales incorrectas
+Login correcto    -&gt; <b class="ok">200</b> Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI...
+Payload: {
+  sub: '1',
+  nombre: 'Lucía Quispe',
+  rol: 'lector',
+  iat: 1794325330,
+  exp: 1794328930
+}
+
+<span class="com"># Registro con datos inválidos (password corta)</span>
+<span class="cmd">$ curl -s -X POST -H "Content-Type: application/json" -d "{\"nombre\":\"Ana\",\"email\":\"ana@x.pe\",\"password\":\"123\"}" -w " -&gt; %{http_code}\n" http://localhost:3005/api/auth/registro</span>
+{"error":"nombre, email y password (mínimo 8 caracteres) son obligatorios"} -&gt; <b class="err">400</b>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] &gt; api_biblioteca@1.0.0 dev</span>
+<span class="srv">[servidor] &gt; nodemon src/index.js</span>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] [nodemon] 3.1.14</span>
+<span class="srv">[servidor] [nodemon] to restart at any time, enter `rs`</span>
+<span class="srv">[servidor] [nodemon] watching path(s): src\**\*</span>
+<span class="srv">[servidor] [nodemon] watching extensions: js,json</span>
+<span class="srv">[servidor] [nodemon] starting `node src/index.js`</span>
+<span class="srv">[servidor] Servidor escuchando en http://localhost:3005</span>
+
+<span class="com"># Las contraseñas se guardan como hash bcrypt (nunca en texto plano):</span>
++----+---------------------+--------------------------------------------------------------+--------+
+| id | email               | password_hash                                                | rol    |
++----+---------------------+--------------------------------------------------------------+--------+
+|  1 | lucia@biblioteca.pe | $2b$10$6JJstLE2aWAFHFTANu0uoe07Wkw.yBsRKVpWFy4rSxUDRvRCfO6mK | lector |
++----+---------------------+--------------------------------------------------------------+--------+
+</pre></div>
+</section>
+<section id="e6">
+  <h2><span>Experiencia 6</span>Protección de rutas con middleware JWT y roles</h2><p class="desc">Para escribir en el catálogo se necesita un token válido y rol admin: sin token 401, sin permiso 403. La lectura sigue siendo pública.</p>
+  <div class="tabs"><button class="tb on" data-t="code">Código</button><button class="tb" data-t="run">Ejecución</button></div>
+  <div class="pane code on"><div class="files"><button class="fb on" data-f="0">src/middlewares/auth.js</button><button class="fb" data-f="1">src/routes/libros.routes.js</button><button class="fb" data-f="2">src/routes/auth.routes.js</button><button class="fb" data-f="3">src/controllers/auth.controller.js</button><button class="fb" data-f="4">scripts/crear_admin.js</button><button class="fb" data-f="5">pruebas/verificar_exp6.js</button></div><div class="viewer"><div class="file on" data-f="0"><div class="path">experiencia6/api_biblioteca/<b>src/middlewares/auth.js</b></div><pre><code class="language-javascript">// src/middlewares/auth.js
+const jwt = require('jsonwebtoken');
+
+// Exige el encabezado  Authorization: Bearer &lt;token&gt;  y valida firma y expiración
+function verificarToken(req, res, next) {
+  const [tipo, token] = (req.headers.authorization ?? '').split(' ');
+  if (tipo !== 'Bearer' || !token) {
+    return res.status(401).json({ error: 'Token no proporcionado' });
+  }
+  try {
+    req.usuario = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
+    next();
+  } catch (err) {
+    const mensaje = err.name === 'TokenExpiredError' ? 'Token expirado' : 'Token inválido';
+    return res.status(401).json({ error: mensaje });
+  }
+}
+
+// Autoriza solo a los roles indicados; se usa después de verificarToken
+function permitirRoles(...roles) {
+  return (req, res, next) =&gt; {
+    if (!roles.includes(req.usuario?.rol)) {
+      return res.status(403).json({ error: 'No tiene permisos para esta operación' });
+    }
+    next();
+  };
+}
+
+module.exports = { verificarToken, permitirRoles };
+</code></pre></div><div class="file" data-f="1"><div class="path">experiencia6/api_biblioteca/<b>src/routes/libros.routes.js</b></div><pre><code class="language-javascript">// src/routes/libros.routes.js
+const { Router } = require('express');
+const ctrl = require('../controllers/libros.controller');
+const { verificarToken, permitirRoles } = require('../middlewares/auth');
+
+const router = Router();
+
+// Lectura pública
+router.get('/', ctrl.listar);
+router.get('/:id', ctrl.obtener);
+
+// Escritura: token válido y rol admin
+router.post('/', verificarToken, permitirRoles('admin'), ctrl.crear);
+router.put('/:id', verificarToken, permitirRoles('admin'), ctrl.actualizar);
+router.delete('/:id', verificarToken, permitirRoles('admin'), ctrl.eliminar);
+
+module.exports = router;
+</code></pre></div><div class="file" data-f="2"><div class="path">experiencia6/api_biblioteca/<b>src/routes/auth.routes.js</b></div><pre><code class="language-javascript">// src/routes/auth.routes.js
+const { Router } = require('express');
+const ctrl = require('../controllers/auth.controller');
+const { verificarToken } = require('../middlewares/auth');
+
+const router = Router();
+
+router.post('/registro', ctrl.registrar);
+router.post('/login', ctrl.login);
+router.get('/perfil', verificarToken, ctrl.perfil);
+
+module.exports = router;
+</code></pre></div><div class="file" data-f="3"><div class="path">experiencia6/api_biblioteca/<b>src/controllers/auth.controller.js</b></div><pre><code class="language-javascript">// src/controllers/auth.controller.js
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { llamar } = require('../db');
+
+const registrar = async (req, res) =&gt; {
+  const { nombre, email, password } = req.body ?? {};
+  if (!nombre || !email || !password || String(password).length &lt; 8) {
+    return res.status(400).json({
+      error: 'nombre, email y password (mínimo 8 caracteres) son obligatorios',
+    });
+  }
+  const correo = String(email).trim().toLowerCase();
+  const hash = await bcrypt.hash(String(password), 10); // 10 rondas de sal
+  try {
+    const [{ id }] = await llamar('sp_usuario_registrar', [nombre, correo, hash, 'lector']);
+    res.status(201).json({ id, nombre, email: correo, rol: 'lector' });
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ error: 'El email ya está registrado' });
+    }
+    throw err; // lo atiende el manejador de errores de app.js
+  }
+};
+
+const login = async (req, res) =&gt; {
+  const { email, password } = req.body ?? {};
+  const correo = String(email ?? '').trim().toLowerCase();
+  const [usuario] = await llamar('sp_usuario_buscar_email', [correo]);
+  const valido = usuario &amp;&amp; (await bcrypt.compare(String(password ?? ''), usuario.password_hash));
+  if (!valido) {
+    return res.status(401).json({ error: 'Credenciales incorrectas' });
+  }
+  const expiraEn = process.env.JWT_EXPIRES_IN || '1h';
+  const token = jwt.sign(
+    { sub: String(usuario.id), nombre: usuario.nombre, rol: usuario.rol },
+    process.env.JWT_SECRET,
+    { algorithm: 'HS256', expiresIn: expiraEn },
+  );
+  res.json({ token, tipo: 'Bearer', expiraEn });
+};
+
+const perfil = async (req, res) =&gt; {
+  const [usuario] = await llamar('sp_usuario_obtener', [Number(req.usuario.sub)]);
+  if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
+  res.json(usuario);
+};
+
+module.exports = { registrar, login, perfil };
+</code></pre></div><div class="file" data-f="4"><div class="path">experiencia6/api_biblioteca/<b>scripts/crear_admin.js</b></div><pre><code class="language-javascript">// scripts/crear_admin.js
+require('dotenv').config({ quiet: true });
+const bcrypt = require('bcryptjs');
+const { pool, llamar } = require('../src/db');
+
+async function main() {
+  const [nombre, email, password] = process.argv.slice(2);
+  if (!nombre || !email || !password) {
+    console.log('Uso: node scripts/crear_admin.js "Nombre" correo clave');
+    return;
+  }
+  const hash = await bcrypt.hash(password, 10);
+  const [{ id }] = await llamar('sp_usuario_registrar',
+    [nombre, email.toLowerCase(), hash, 'admin']);
+  console.log(`Administrador creado con id ${id}`);
+}
+
+main()
+  .catch((e) =&gt; console.error('Error:', e.message))
+  .finally(() =&gt; pool.end());
+</code></pre></div><div class="file" data-f="5"><div class="path">experiencia6/api_biblioteca/<b>pruebas/verificar_exp6.js</b></div><pre><code class="language-javascript">// pruebas/verificar_exp6.js
+const { pedir } = require('./http');
+
+const API = 'http://localhost:3006/api';
+const nuevo = { titulo: 'El zorro de arriba y el zorro de abajo',
+                autor: 'José María Arguedas', anio: 1971 };
+
+async function iniciarSesion(email, password) {
+  const r = await pedir('POST', `${API}/auth/login`, { email, password });
+  return r.datos.token;
+}
+
+async function main() {
+  let r = await pedir('GET', `${API}/libros`);
+  console.log('GET público         -&gt;', r.estado, r.datos.length, 'libros');
+
+  r = await pedir('POST', `${API}/libros`, nuevo);
+  console.log('POST sin token      -&gt;', r.estado, r.datos.error);
+
+  r = await pedir('POST', `${API}/libros`, nuevo, 'abc.def.ghi');
+  console.log('POST token falso    -&gt;', r.estado, r.datos.error);
+
+  const tokenLector = await iniciarSesion('lucia@biblioteca.pe', 'Lectura2026');
+  r = await pedir('POST', `${API}/libros`, nuevo, tokenLector);
+  console.log('POST como lector    -&gt;', r.estado, r.datos.error);
+
+  const tokenAdmin = await iniciarSesion('admin@biblioteca.pe', 'Admin#2026');
+  r = await pedir('POST', `${API}/libros`, nuevo, tokenAdmin);
+  const id = r.datos.id;
+  console.log('POST como admin     -&gt;', r.estado, 'id =', id);
+
+  r = await pedir('DELETE', `${API}/libros/${id}`, null, tokenAdmin);
+  console.log('DELETE como admin   -&gt;', r.estado);
+
+  r = await pedir('GET', `${API}/auth/perfil`, null, tokenLector);
+  console.log('Perfil del lector   -&gt;', r.estado, r.datos.nombre, '-', r.datos.rol);
+}
+
+main().catch((e) =&gt; console.error('Error:', e.message));
+</code></pre></div></div></div>
+  <div class="pane run"><pre class="out">===== EXPERIENCIA 6: PROTECCIÓN DE RUTAS CON MIDDLEWARE JWT Y ROLES =====
+<span class="cmd">$ node scripts/crear_admin.js "Administrador" admin@biblioteca.pe "Admin#2026"</span>
+Administrador creado con id 3
+<span class="cmd">$ npm run dev</span>
+<span class="cmd">$ node pruebas/verificar_exp6.js</span>
+GET público         -&gt; <b class="ok">200</b> 2 libros
+POST sin token      -&gt; <b class="err">401</b> Token no proporcionado
+POST token falso    -&gt; <b class="err">401</b> Token inválido
+POST como lector    -&gt; <b class="err">403</b> No tiene permisos para esta operación
+POST como admin     -&gt; <b class="ok">201</b> id = 4
+DELETE como admin   -&gt; <b class="ok">204</b>
+Perfil del lector   -&gt; <b class="ok">200</b> Lucía Quispe - lector
+
+<span class="com"># Token expirado (firmado con exp en el pasado) y perfil sin token</span>
+<span class="cmd">$ curl -s -X POST -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwicm9sIjoiYWRtaW4iLCJleHAiOjE3OTQzMjUyNzcsImlhdCI6MTc5NDMyNTMzN30.qZXGuzN-_UOGQULg8xbdJZSiu4oQojOXeB5WTOJOWGA" -H "Content-Type: application/json" -d "{}" -w " -&gt; %{http_code}\n" http://localhost:3006/api/libros</span>
+{"error":"Token expirado"} -&gt; <b class="err">401</b>
+<span class="cmd">$ curl -s -w " -&gt; %{http_code}\n" http://localhost:3006/api/auth/perfil</span>
+{"error":"Token no proporcionado"} -&gt; <b class="err">401</b>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] &gt; api_biblioteca@1.0.0 dev</span>
+<span class="srv">[servidor] &gt; nodemon src/index.js</span>
+<span class="srv">[servidor] </span>
+<span class="srv">[servidor] [nodemon] 3.1.14</span>
+<span class="srv">[servidor] [nodemon] to restart at any time, enter `rs`</span>
+<span class="srv">[servidor] [nodemon] watching path(s): src\**\*</span>
+<span class="srv">[servidor] [nodemon] watching extensions: js,json</span>
+<span class="srv">[servidor] [nodemon] starting `node src/index.js`</span>
+<span class="srv">[servidor] Servidor escuchando en http://localhost:3006</span>
+</pre></div>
+</section></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+<script>
+try { hljs.highlightAll(); } catch (e) {}
+document.querySelectorAll('section').forEach((s) => {
+  s.querySelectorAll('.tb').forEach((b) => b.onclick = () => {
+    s.querySelectorAll('.tb').forEach((x) => x.classList.toggle('on', x === b));
+    s.querySelectorAll('.pane').forEach((p) => p.classList.toggle('on', p.classList.contains(b.dataset.t)));
+  });
+  s.querySelectorAll('.fb').forEach((b) => b.onclick = () => {
+    s.querySelectorAll('.fb').forEach((x) => x.classList.toggle('on', x === b));
+    s.querySelectorAll('.file').forEach((f) => f.classList.toggle('on', f.dataset.f === b.dataset.f));
+  });
+});
+</script></body></html>

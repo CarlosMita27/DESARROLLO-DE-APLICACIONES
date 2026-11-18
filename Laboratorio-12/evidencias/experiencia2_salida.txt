@@ -1,0 +1,33 @@
+===== EXPERIENCIA 2: SERVICIO RESTFUL CRUD CON EXPRESS ROUTER =====
+$ npm run dev
+$ node pruebas/verificar_exp2.js
+POST válido    -> 201 id = 3
+POST inválido  -> 400 titulo y autor son obligatorios
+PUT            -> 200 anio = 1958
+GET lista      -> 200 [
+  'Cien años de soledad',
+  'La ciudad y los perros',
+  'Los ríos profundos'
+]
+DELETE         -> 204
+GET eliminado  -> 404 Libro no encontrado
+
+# Casos adicionales: PUT inválido, PUT/DELETE inexistente y ruta no encontrada
+$ curl -s -X PUT -H "Content-Type: application/json" -d "{\"titulo\":\"\"}" -w " -> %{http_code}\n" http://localhost:3002/api/libros/1
+{"error":"titulo y autor son obligatorios"} -> 400
+$ curl -s -X PUT -H "Content-Type: application/json" -d "{\"titulo\":\"X\",\"autor\":\"Y\"}" -w " -> %{http_code}\n" http://localhost:3002/api/libros/99
+{"error":"Libro no encontrado"} -> 404
+$ curl -s -X DELETE -w " -> %{http_code}\n" http://localhost:3002/api/libros/99
+{"error":"Libro no encontrado"} -> 404
+$ curl -s -w " -> %{http_code}\n" http://localhost:3002/api/autores
+{"error":"Ruta GET /api/autores no encontrada"} -> 404
+[servidor] 
+[servidor] > api_biblioteca@1.0.0 dev
+[servidor] > nodemon src/index.js
+[servidor] 
+[servidor] [nodemon] 3.1.14
+[servidor] [nodemon] to restart at any time, enter `rs`
+[servidor] [nodemon] watching path(s): src\**\*
+[servidor] [nodemon] watching extensions: js,json
+[servidor] [nodemon] starting `node src/index.js`
+[servidor] Servidor escuchando en http://localhost:3002

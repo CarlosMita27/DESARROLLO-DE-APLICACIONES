@@ -1,0 +1,12 @@
+{
+  "folders": [
+    { "name": "Experiencia 1 - Express y Nodemon", "path": "experiencia1/api_biblioteca" },
+    { "name": "Experiencia 2 - CRUD con Router", "path": "experiencia2/api_biblioteca" },
+    { "name": "Experiencia 3 - MySQL y procedimientos", "path": "experiencia3/api_biblioteca" },
+    { "name": "Experiencia 4 - MySQL en la nube (Aiven)", "path": "experiencia4/api_biblioteca" },
+    { "name": "Experiencia 5 - Registro y login JWT", "path": "experiencia5/api_biblioteca" },
+    { "name": "Experiencia 6 - Middleware JWT y roles", "path": "experiencia6/api_biblioteca" },
+    { "name": "Evidencias", "path": "evidencias" }
+  ],
+  "settings": { "files.exclude": { "**/node_modules": true } }
+}

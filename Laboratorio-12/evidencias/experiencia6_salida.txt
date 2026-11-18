@@ -1,0 +1,28 @@
+===== EXPERIENCIA 6: PROTECCIÓN DE RUTAS CON MIDDLEWARE JWT Y ROLES =====
+$ node scripts/crear_admin.js "Administrador" admin@biblioteca.pe "Admin#2026"
+Administrador creado con id 3
+$ npm run dev
+$ node pruebas/verificar_exp6.js
+GET público         -> 200 2 libros
+POST sin token      -> 401 Token no proporcionado
+POST token falso    -> 401 Token inválido
+POST como lector    -> 403 No tiene permisos para esta operación
+POST como admin     -> 201 id = 4
+DELETE como admin   -> 204
+Perfil del lector   -> 200 Lucía Quispe - lector
+
+# Token expirado (firmado con exp en el pasado) y perfil sin token
+$ curl -s -X POST -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwicm9sIjoiYWRtaW4iLCJleHAiOjE3OTQzMjUyNzcsImlhdCI6MTc5NDMyNTMzN30.qZXGuzN-_UOGQULg8xbdJZSiu4oQojOXeB5WTOJOWGA" -H "Content-Type: application/json" -d "{}" -w " -> %{http_code}\n" http://localhost:3006/api/libros
+{"error":"Token expirado"} -> 401
+$ curl -s -w " -> %{http_code}\n" http://localhost:3006/api/auth/perfil
+{"error":"Token no proporcionado"} -> 401
+[servidor] 
+[servidor] > api_biblioteca@1.0.0 dev
+[servidor] > nodemon src/index.js
+[servidor] 
+[servidor] [nodemon] 3.1.14
+[servidor] [nodemon] to restart at any time, enter `rs`
+[servidor] [nodemon] watching path(s): src\**\*
+[servidor] [nodemon] watching extensions: js,json
+[servidor] [nodemon] starting `node src/index.js`
+[servidor] Servidor escuchando en http://localhost:3006

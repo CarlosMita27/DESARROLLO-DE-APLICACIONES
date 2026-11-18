@@ -1,0 +1,71 @@
+===== EXPERIENCIA 3: PERSISTENCIA CON MYSQL Y PROCEDIMIENTOS ALMACENADOS =====
+# Servidor MySQL 8 local (puerto 3307 en este equipo)
+$ mysql -u root -p < sql/biblioteca.sql
+(script ejecutado sin errores)
+$ mysql> SHOW PROCEDURE STATUS WHERE Db = 'biblioteca';
++----------------------+-----------+
+| procedimiento        | tipo      |
++----------------------+-----------+
+| sp_libros_actualizar | PROCEDURE |
+| sp_libros_crear      | PROCEDURE |
+| sp_libros_eliminar   | PROCEDURE |
+| sp_libros_listar     | PROCEDURE |
+| sp_libros_obtener    | PROCEDURE |
++----------------------+-----------+
+$ cat .env
+PORT=3003
+DB_HOST=127.0.0.1
+DB_PORT=3307
+DB_USER=biblioteca_user
+DB_PASSWORD=CambiaEstaClave_123
+DB_NAME=biblioteca
+$ npm run dev
+$ node pruebas/verificar_exp2.js
+POST válido    -> 201 id = 3
+POST inválido  -> 400 titulo y autor son obligatorios
+PUT            -> 200 anio = 1958
+GET lista      -> 200 [
+  'Cien años de soledad',
+  'La ciudad y los perros',
+  'Los ríos profundos'
+]
+DELETE         -> 204
+GET eliminado  -> 404 Libro no encontrado
+
+# Se crea un libro que queda guardado en MySQL
+$ curl -s -X POST -H "Content-Type: application/json" -d "{\"titulo\":\"Tradiciones peruanas\",\"autor\":\"Ricardo Palma\",\"anio\":1872}" -w " -> %{http_code}\n" http://localhost:3003/api/libros
+{"id":4,"titulo":"Tradiciones peruanas","autor":"Ricardo Palma","anio":1872} -> 201
+[servidor] 
+[servidor] > api_biblioteca@1.0.0 dev
+[servidor] > nodemon src/index.js
+[servidor] 
+[servidor] [nodemon] 3.1.14
+[servidor] [nodemon] to restart at any time, enter `rs`
+[servidor] [nodemon] watching path(s): src\**\*
+[servidor] [nodemon] watching extensions: js,json
+[servidor] [nodemon] starting `node src/index.js`
+[servidor] Servidor escuchando en http://localhost:3003
+
+# El servidor se detuvo y se vuelve a iniciar: los datos persisten
+$ npm run dev
+$ curl -s -w " -> %{http_code}\n" http://localhost:3003/api/libros
+[{"id":1,"titulo":"Cien años de soledad","autor":"Gabriel García Márquez","anio":1967},{"id":2,"titulo":"La ciudad y los perros","autor":"Mario Vargas Llosa","anio":1963},{"id":4,"titulo":"Tradiciones peruanas","autor":"Ricardo Palma","anio":1872}] -> 200
+[servidor] 
+[servidor] > api_biblioteca@1.0.0 dev
+[servidor] > nodemon src/index.js
+[servidor] 
+[servidor] [nodemon] 3.1.14
+[servidor] [nodemon] to restart at any time, enter `rs`
+[servidor] [nodemon] watching path(s): src\**\*
+[servidor] [nodemon] watching extensions: js,json
+[servidor] [nodemon] starting `node src/index.js`
+[servidor] Servidor escuchando en http://localhost:3003
+
+$ mysql> CALL sp_libros_listar();
++----+------------------------+--------------------------+------+
+| id | titulo                 | autor                    | anio |
++----+------------------------+--------------------------+------+
+|  1 | Cien años de soledad   | Gabriel García Márquez   | 1967 |
+|  2 | La ciudad y los perros | Mario Vargas Llosa       | 1963 |
+|  4 | Tradiciones peruanas   | Ricardo Palma            | 1872 |
++----+------------------------+--------------------------+------+

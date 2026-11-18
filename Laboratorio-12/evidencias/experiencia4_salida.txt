@@ -1,0 +1,54 @@
+===== EXPERIENCIA 4: BASE DE DATOS MYSQL EN LA NUBE (TLS) =====
+# Proveedor: Aiven for MySQL (plan Developer, DigitalOcean nyc). SSL mode: REQUIRED.
+# Host: mysql-3bfd4f3d-carlosalberto1527m-e456.f.aivencloud.com  Puerto: 15472  CA: certs/ca.pem (descargado del panel)
+
+# Cliente mysql con SSL verificado, usuario administrador del proveedor (avnadmin):
+$ mysql -h <host> -P <puerto> -u avnadmin -p --ssl-mode=VERIFY_IDENTITY --ssl-ca=certs/ca.pem < sql/nube_base_usuario.sql
+(base biblioteca y usuario biblioteca_app creados; la clave real está en .env)
+$ mysql ... -D biblioteca < sql/biblioteca_nube.sql   (biblioteca.sql sin el bloque del usuario local)
+(tablas y procedimientos creados)
+
+$ mysql (nube)> SHOW PROCEDURE STATUS WHERE Db = 'biblioteca';
++----------------------+
+| procedimiento        |
++----------------------+
+| sp_libros_actualizar |
+| sp_libros_crear      |
+| sp_libros_eliminar   |
+| sp_libros_listar     |
+| sp_libros_obtener    |
++----------------------+
+
+# Validación del certificado: con una CA equivocada la conexión TLS se rechaza
+$ mysql -h <host> -P <puerto> -u avnadmin -p --ssl-mode=VERIFY_IDENTITY --ssl-ca=<CA de otro servidor>
+ERROR 2026 (HY000): SSL connection error: error:0A000086:SSL routines::certificate verify failed
+$ cat .gitignore
+node_modules/
+.env
+certs/
+$ node pruebas/probar_conexion.js
+Conectado a MySQL 8.4.11 - base: biblioteca
+Cifrado TLS: TLS_AES_256_GCM_SHA384
+Libros en la nube: [ 'Cien años de soledad', 'La ciudad y los perros' ]
+$ npm run dev
+$ node pruebas/verificar_exp2.js
+POST válido    -> 201 id = 3
+POST inválido  -> 400 titulo y autor son obligatorios
+PUT            -> 200 anio = 1958
+GET lista      -> 200 [
+  'Cien años de soledad',
+  'La ciudad y los perros',
+  'Los ríos profundos'
+]
+DELETE         -> 204
+GET eliminado  -> 404 Libro no encontrado
+[servidor] 
+[servidor] > api_biblioteca@1.0.0 dev
+[servidor] > nodemon src/index.js
+[servidor] 
+[servidor] [nodemon] 3.1.14
+[servidor] [nodemon] to restart at any time, enter `rs`
+[servidor] [nodemon] watching path(s): src\**\*
+[servidor] [nodemon] watching extensions: js,json
+[servidor] [nodemon] starting `node src/index.js`
+[servidor] Servidor escuchando en http://localhost:3004
